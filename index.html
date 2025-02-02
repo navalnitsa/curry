@@ -5,17 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Invitation</title>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #241a2b;
+      text-align: center;
+    }
+
+    h1, h2 {
+      color: #d3d3d3;
+    }
+
+    button {
+      padding: 12px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #624e70;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    button:hover {
+      background-color: #3c2c46;
+    }
+
+    button:active {
+      background-color: #3c2c46;
+    }
+
+    div {
+      width: 100%;
+      max-width: 400px;
+      margin: 10px auto;
+    }
+  </style>
   <script>
     (function() {
-      emailjs.init("UMKUtiMmEfDbPdjN5"); // Твой publicKey
+      emailjs.init("UMKUtiMmEfDbPdjN5");
     })();
 
-    function sendResponse(response, place = null, type = null, location = null) {
+    function sendResponse(response, place = null, type = null, location = null, activity = null) {
       const message = `
         Response: ${response}
         Place: ${place || "N/A"}
         Type: ${type || "N/A"}
         Location: ${location || "N/A"}
+        Activity: ${activity || "N/A"}
       `;
 
       emailjs
@@ -24,66 +71,81 @@
           place,
           type,
           location,
+          activity,
         })
         .then(
           function() {
-            alert("Ответ отправлен! Ждите письма 😊");
+            alert("Thanks for your response <3");
           },
           function(error) {
-            alert("Ошибка отправки 😢 Попробуйте позже");
+            alert("Some trouble sending your response, pls turn off your VPN");
           }
         );
     }
 
     function showDecision(response) {
-      if (response === "Нет") {
-        sendResponse("Нет");
+      if (response === "No") {
+        sendResponse("No");
       } else {
         document.getElementById("place-options").style.display = "block";
       }
     }
 
     function choosePlace(place) {
-      if (place === "Дома") {
-        document.getElementById("place-options").style.display = "none";
+      document.getElementById("place-options").style.display = "none";
+      if (place === "Indoors") {
         document.getElementById("home-options").style.display = "block";
       } else {
-        document.getElementById("place-options").style.display = "none";
         document.getElementById("outside-options").style.display = "block";
       }
     }
 
     function chooseHome(location) {
-      sendResponse("Иду", "Дома", null, location);
+      document.getElementById("home-options").style.display = "none";
+      document.getElementById("home-activity-options").style.display = "block";
+      document.getElementById("home-activity-options").setAttribute("data-location", location);
+    }
+
+    function chooseHomeActivity(activity) {
+      const location = document.getElementById("home-activity-options").getAttribute("data-location");
+      sendResponse("Going", "Indoors", null, location, activity);
     }
 
     function chooseType(type) {
-      sendResponse("Иду", "На улице", type);
+      sendResponse("Going", "Outdoors", type);
     }
   </script>
 </head>
 <body>
-  <h1>Пойдёшь на свидание? 🥰</h1>
-  <button onclick="showDecision('Да')">Да</button>
-  <button onclick="showDecision('Нет')">Нет</button>
+    <img src="sticker.png" alt="no pic" style="width:200px;">
+  <h1>Wanna go out with me? (Please)</h1>
+  <button onclick="showDecision('Yes')">Yes</button>
+  <button onclick="showDecision('No')">No</button>
 
-  <div id="place-options" style="display: none; margin-top: 20px;">
-    <h2>Где проведем свидание?</h2>
-    <button onclick="choosePlace('Дома')">Дома</button>
-    <button onclick="choosePlace('На улице')">На улице</button>
+  <div id="place-options" style="display: none;">
+    <h2>Where you wanna go?</h2>
+    <button onclick="choosePlace('Indoors')">Indoors</button>
+    <button onclick="choosePlace('Outdoors')">Outdoors</button>
   </div>
 
-  <div id="home-options" style="display: none; margin-top: 20px;">
-    <h2>У тебя или у меня? 🏠</h2>
-    <button onclick="chooseHome('У меня')">У меня</button>
-    <button onclick="chooseHome('У тебя')">У тебя</button>
+  <div id="home-options" style="display: none;">
+    <h2>Location?</h2>
+    <button onclick="chooseHome('My place')">My place</button>
+    <button onclick="chooseHome('Your place')">Your place</button>
   </div>
 
-  <div id="outside-options" style="display: none; margin-top: 20px;">
-    <h2>Выбери тип свидания на улице 🌳</h2>
-    <button onclick="chooseType('Кафе')">Кафе</button>
-    <button onclick="chooseType('Прогулка в парке')">Прогулка в парке</button>
-    <button onclick="chooseType('Кино')">Кино</button>
+  <div id="home-activity-options" style="display: none;">
+    <h2>What do you want to do? 🍳</h2>
+    <button onclick="chooseHomeActivity('Play board games')">Play board games</button>
+    <button onclick="chooseHomeActivity('Watch a movie')">Watch a movie</button>
+    <button onclick="chooseHomeActivity('Deactivate a bomb')">Deactivate a bomb</button>
+  </div>
+
+  <div id="outside-options" style="display: none;">
+    <h2>What do you want to do? 🌳</h2>
+    <button onclick="chooseType('Go to a restaurant')">Go to a restaurant</button>
+    <button onclick="chooseType('Movies')">Movies</button>
+    <button onclick="chooseType('Something else')">Something else</button>
   </div>
 </body>
 </html>
