@@ -3,32 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test EmailJS</title>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <title>Invitation</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("UMKUtiMmEfDbPdjN5"); // Замени на свой publicKey
+      emailjs.init("UMKUtiMmEfDbPdjN5"); // Твой publicKey
     })();
 
-    function sendTestEmail() {
-      emailjs.send("service_824qfo3", "template_75hg6au", {
-        response: "Test Response",
-        place: "Test Place",
-        type: "Test Type",
-      }).then(
-        function() {
-          alert("Успешно отправлено! 🎉");
-        },
-        function(error) {
-          console.error("Ошибка отправки:", error);
-          alert("Ошибка отправки 😢 Проверь консоль для деталей.");
-        }
-      );
+    function sendResponse(response, place = null, type = null, location = null) {
+      const message = `
+        Response: ${response}
+        Place: ${place || "N/A"}
+        Type: ${type || "N/A"}
+        Location: ${location || "N/A"}
+      `;
+
+      emailjs
+        .send("service_824qfo3", "main_temp", {
+          response,
+          place,
+          type,
+          location,
+        })
+        .then(
+          function() {
+            alert("Ответ отправлен! Ждите письма 😊");
+          },
+          function(error) {
+            alert("Ошибка отправки 😢 Попробуйте позже");
+          }
+        );
+    }
+
+    function showDecision(response) {
+      if (response === "Нет") {
+        sendResponse("Нет");
+      } else {
+        document.getElementById("place-options").style.display = "block";
+      }
+    }
+
+    function choosePlace(place) {
+      if (place === "Дома") {
+        document.getElementById("place-options").style.display = "none";
+        document.getElementById("home-options").style.display = "block";
+      } else {
+        document.getElementById("place-options").style.display = "none";
+        document.getElementById("outside-options").style.display = "block";
+      }
+    }
+
+    function chooseHome(location) {
+      sendResponse("Иду", "Дома", null, location);
+    }
+
+    function chooseType(type) {
+      sendResponse("Иду", "На улице", type);
     }
   </script>
 </head>
 <body>
-  <h1>EmailJS Test</h1>
-  <button onclick="sendTestEmail()">Отправить тестовое письмо</button>
+  <h1>Пойдёшь на свидание? 🥰</h1>
+  <button onclick="showDecision('Да')">Да</button>
+  <button onclick="showDecision('Нет')">Нет</button>
+
+  <div id="place-options" style="display: none; margin-top: 20px;">
+    <h2>Где проведем свидание?</h2>
+    <button onclick="choosePlace('Дома')">Дома</button>
+    <button onclick="choosePlace('На улице')">На улице</button>
+  </div>
+
+  <div id="home-options" style="display: none; margin-top: 20px;">
+    <h2>У тебя или у меня? 🏠</h2>
+    <button onclick="chooseHome('У меня')">У меня</button>
+    <button onclick="chooseHome('У тебя')">У тебя</button>
+  </div>
+
+  <div id="outside-options" style="display: none; margin-top: 20px;">
+    <h2>Выбери тип свидания на улице 🌳</h2>
+    <button onclick="chooseType('Кафе')">Кафе</button>
+    <button onclick="chooseType('Прогулка в парке')">Прогулка в парке</button>
+    <button onclick="chooseType('Кино')">Кино</button>
+  </div>
 </body>
 </html>
