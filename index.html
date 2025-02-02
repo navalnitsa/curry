@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Приглашение</title>
+  <title>Invitation</title>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     (function() {
@@ -18,10 +18,10 @@
         : `He said: ${response}`;
 
       emailjs
-        .send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-          to_name: "Елизавета", // Замените на ваше имя
+        .send("service_824qfo3", "main_temp", {
+          to_name: "Elizabeth", // Замените на ваше имя
           message,
-          to_email: "your_email@example.com", // Замените на свою почту
+          to_email: "navalnitsa1309@gmail.com", // Замените на свою почту
         })
         .then(
           function() {
