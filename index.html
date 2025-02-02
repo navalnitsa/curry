@@ -4,93 +4,55 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Invitation</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    (function() {
-        emailjs.init({
-              publicKey: "UMKUtiMmEfDbPdjN5",
-            });
+    (function () {
+      // Инициализация EmailJS SDK с публичным ключом
+      emailjs.init("UMKUtiMmEfDbPdjN5"); // Заменить на твой публичный ключ
     })();
 
-    function sendResponse(response, place = null, type = null) {
-      const message = place
-        ? `He said: ${response}. Место: ${place}. Тип: ${type}`
-        : `He said: ${response}`;
+    function sendResponse(response) {
+      // Заполняем скрытые поля формы для передачи EmailJS
+      document.getElementById("response").value = response;
 
-      emailjs
-        .send("service_824qfo3", "main_temp", {
-          to_name: "Elizabeth", // Замените на ваше имя
-          message,
-          to_email: "navalnitsa1309@gmail.com", // Замените на свою почту
-        })
-        .then(
-          function() {
-            alert("Ответ отправлен! Ждите письма 😊");
-          },
-          function(error) {
-            alert("Ошибка отправки 😢 Попробуйте позже");
-          }
-        );
+      // Если выбрано "Да", отображаем варианты
+      if (response === "Иду") {
+        document.getElementById("place-options").style.display = "block";
+      } else {
+        // Если "Нет", сразу отправляем форму
+        document.getElementById("response-form").submit();
+      }
     }
 
-    function showPlaceOptions() {
-      document.getElementById("place-options").style.display = "block";
-    }
+    function submitWithPlace(place, type) {
+      // Заполняем скрытые поля для места и типа свидания
+      document.getElementById("place").value = place;
+      document.getElementById("type").value = type;
 
-    function showTypeOptions(place) {
-      document.getElementById("place-options").style.display = "none";
-      const typeOptions = document.getElementById("type-options");
-      typeOptions.style.display = "block";
-      typeOptions.setAttribute("data-place", place);
-    }
-
-    function chooseType(type) {
-      const place = document.getElementById("type-options").getAttribute("data-place");
-      sendResponse("Иду", place, type);
+      // Отправляем форму
+      document.getElementById("response-form").submit();
     }
   </script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
-      background: #f9f9f9;
-    }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 18px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background: #4caf50;
-      color: white;
-    }
-    button.no {
-      background: #f44336;
-    }
-    #place-options, #type-options {
-      display: none;
-    }
-  </style>
 </head>
 <body>
-  <h1>Пойдёшь со мной на свидание? 😊</h1>
-  <button onclick="showPlaceOptions()">Иду!</button>
-  <button class="no" onclick="sendResponse('Не иду')">Не иду 😢</button>
+  <h1>Will you go on a date with me?</h1>
 
-  <div id="place-options">
-    <h2>Где проведём?</h2>
-    <button onclick="showTypeOptions('Дома')">Дома</button>
-    <button onclick="showTypeOptions('В каком-то месте')">В каком-то месте</button>
-  </div>
+  <!-- Форма для отправки данных через EmailJS -->
+  <form id="response-form" style="display: none;" action="#">
+    <input type="hidden" id="response" name="response">
+    <input type="hidden" id="place" name="place">
+    <input type="hidden" id="type" name="type">
+  </form>
 
-  <div id="type-options">
-    <h2>Какой вариант выберем?</h2>
-    <button onclick="chooseType('Уютный вечер с фильмами')">Уютный вечер с фильмами</button>
-    <button onclick="chooseType('Романтический ужин')">Романтический ужин</button>
-    <button onclick="chooseType('Прогулка в парке')">Прогулка в парке</button>
-    <button onclick="chooseType('Поход в кафе')">Поход в кафе</button>
+  <button onclick="sendResponse('Иду')">Да</button>
+  <button onclick="sendResponse('Не иду')">Нет</button>
+
+  <!-- Блок выбора места -->
+  <div id="place-options" style="display:none;">
+    <h2>Где?</h2>
+    <button onclick="submitWithPlace('Дома', 'Романтическое')">Дома - Романтическое</button>
+    <button onclick="submitWithPlace('Кафе', 'Дружеское')">Кафе - Дружеское</button>
+    <button onclick="submitWithPlace('Прогулка', 'Сюрприз')">Прогулка - Сюрприз</button>
   </div>
 </body>
 </html>
