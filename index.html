@@ -3,56 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invitation</title>
+  <title>Test EmailJS</title>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    (function () {
-      // Инициализация EmailJS SDK с публичным ключом
-      emailjs.init("UMKUtiMmEfDbPdjN5"); // Заменить на твой публичный ключ
+    (function() {
+      emailjs.init("UMKUtiMmEfDbPdjN5"); // Замени на свой publicKey
     })();
 
-    function sendResponse(response) {
-      // Заполняем скрытые поля формы для передачи EmailJS
-      document.getElementById("response").value = response;
-
-      // Если выбрано "Да", отображаем варианты
-      if (response === "Иду") {
-        document.getElementById("place-options").style.display = "block";
-      } else {
-        // Если "Нет", сразу отправляем форму
-        document.getElementById("response-form").submit();
-      }
-    }
-
-    function submitWithPlace(place, type) {
-      // Заполняем скрытые поля для места и типа свидания
-      document.getElementById("place").value = place;
-      document.getElementById("type").value = type;
-
-      // Отправляем форму
-      document.getElementById("response-form").submit();
+    function sendTestEmail() {
+      emailjs.send("service_824qfo3", "template_75hg6au", {
+        response: "Test Response",
+        place: "Test Place",
+        type: "Test Type",
+      }).then(
+        function() {
+          alert("Успешно отправлено! 🎉");
+        },
+        function(error) {
+          console.error("Ошибка отправки:", error);
+          alert("Ошибка отправки 😢 Проверь консоль для деталей.");
+        }
+      );
     }
   </script>
 </head>
 <body>
-  <h1>Will you go on a date with me?</h1>
-
-  <!-- Форма для отправки данных через EmailJS -->
-  <form id="response-form" style="display: none;" action="#">
-    <input type="hidden" id="response" name="response">
-    <input type="hidden" id="place" name="place">
-    <input type="hidden" id="type" name="type">
-  </form>
-
-  <button onclick="sendResponse('Иду')">Да</button>
-  <button onclick="sendResponse('Не иду')">Нет</button>
-
-  <!-- Блок выбора места -->
-  <div id="place-options" style="display:none;">
-    <h2>Где?</h2>
-    <button onclick="submitWithPlace('Дома', 'Романтическое')">Дома - Романтическое</button>
-    <button onclick="submitWithPlace('Кафе', 'Дружеское')">Кафе - Дружеское</button>
-    <button onclick="submitWithPlace('Прогулка', 'Сюрприз')">Прогулка - Сюрприз</button>
-  </div>
+  <h1>EmailJS Test</h1>
+  <button onclick="sendTestEmail()">Отправить тестовое письмо</button>
 </body>
 </html>
