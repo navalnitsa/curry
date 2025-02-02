@@ -7,7 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("YOUR_USER_ID"); // Замените YOUR_USER_ID на ID из EmailJS
+      emailjs.init("liza"); // Замените YOUR_USER_ID на ID из EmailJS
     })();
 
     function sendResponse(response, place = null, type = null) {
@@ -16,10 +16,10 @@
         : `Коллега ответил: ${response}`;
 
       emailjs
-        .send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        .send("navalnitsa", "main_temp", {
           to_name: "Елизавета", // Замените на ваше имя
           message,
-          to_email: "your_email@example.com", // Замените на свою почту
+          to_email: "navalnitsa1309@gmail.com", // Замените на свою почту
         })
         .then(
           function() {
