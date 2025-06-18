@@ -7,9 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&family=Poppins:wght@400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #0d6f72;
-      --secondary: #168aad;
-      --highlight: #6f42c1;
+      --bg1: #0a4941;
+      --bg2: #125e56;
+      --glow: rgba(255, 189, 245, 0.12);
+      --glow2: rgba(238, 180, 255, 0.08);
+      --text: #ffffff;
+      --accent: #edb4ff;
     }
 
     * {
@@ -18,15 +21,43 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
       font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), #6f42c133, #168aad 60%, #0d6f72);
-      background-repeat: no-repeat;
-      background-size: 150% 150%;
-      min-height: 100vh;
-      color: white;
-      transition: background 0.2s;
       overflow-x: hidden;
+      background: radial-gradient(circle at center, var(--bg2), var(--bg1));
+      color: var(--text);
+      position: relative;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      pointer-events: none;
+      background: radial-gradient(circle, var(--glow), transparent 60%);
+      animation: pulse 6s ease-in-out infinite alternate;
+      z-index: -2;
+    }
+
+    body::after {
+      background: radial-gradient(circle, var(--glow2), transparent 65%);
+      animation: floatlight 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+      100% { transform: scale(1.3) translate(30px, 40px); opacity: 0.6; }
+    }
+
+    @keyframes floatlight {
+      0% { transform: scale(1) translate(-20px, -30px); opacity: 0.3; }
+      100% { transform: scale(1.5) translate(40px, 60px); opacity: 0.5; }
     }
 
     header {
@@ -36,32 +67,66 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      z-index: 10;
+      position: relative;
     }
 
     nav {
       display: flex;
-      gap: 30px;
+      gap: 25px;
       flex-wrap: wrap;
     }
 
     nav a {
-      text-decoration: none;
-      font-weight: 500;
       font-family: 'Poppins', sans-serif;
       color: black;
-      position: relative;
-      padding: 10px 16px;
+      text-decoration: none;
+      padding: 12px 20px;
       border-radius: 30px;
-      overflow: hidden;
       background: transparent;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
     }
 
     nav a:hover {
+      background: linear-gradient(135deg, #b9ffe8, #ecb1f5);
       color: white;
-      background: linear-gradient(135deg, var(--secondary), var(--highlight));
-      transform: scale(1.05);
+      transform: scale(1.07);
       animation: jelly 0.4s ease;
+      box-shadow: 0 0 10px rgba(255, 200, 255, 0.4);
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      top: -25%;
+      left: -25%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      border-radius: 50%;
+    }
+
+    nav a:hover::after {
+      opacity: 1;
+      animation: bubble 0.5s ease-out forwards;
+    }
+
+    @keyframes bubble {
+      0% { transform: scale(0); opacity: 0.6; }
+      60% { transform: scale(1.5); opacity: 0.2; }
+      100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    @keyframes jelly {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.15, 0.85); }
+      50% { transform: scale(0.9, 1.1); }
+      70% { transform: scale(1.05, 0.95); }
+      100% { transform: scale(1); }
     }
 
     .lang-switch {
@@ -70,45 +135,47 @@
     }
 
     .lang-switch button {
+      font-family: 'Poppins', sans-serif;
       padding: 8px 16px;
       border: none;
-      border-radius: 25px;
-      font-family: 'Poppins', sans-serif;
+      border-radius: 20px;
       cursor: pointer;
-      transition: 0.3s ease;
       background: transparent;
+      transition: all 0.3s ease;
+      color: black;
     }
 
     .lang-switch button.active {
-      background: #2e6258;
+      background: #0f6259;
       color: white;
     }
 
     .lang-switch button:hover {
-      background: linear-gradient(135deg, var(--secondary), var(--highlight));
+      background: linear-gradient(135deg, #b9ffe8, #ecb1f5);
       color: white;
-      transform: scale(1.05);
       animation: jelly 0.4s ease;
     }
 
     main {
-      padding: 60px 40px;
+      padding: 100px 40px 60px;
+      z-index: 1;
+      position: relative;
     }
 
-    h1 {
+    h1, h2 {
       font-family: 'League Spartan', sans-serif;
-      font-size: 3rem;
+      font-size: 4rem;
+      line-height: 1.1;
     }
 
     h2 {
-      font-family: 'League Spartan', sans-serif;
-      font-size: 3.5rem;
       margin-bottom: 20px;
     }
 
     .profession {
-      font-family: sans-serif; /* Заменим на TT Fors, если будет */
+      font-family: 'Poppins', sans-serif;
       font-size: 1.5rem;
+      opacity: 0.95;
     }
 
     @media (max-width: 768px) {
@@ -122,51 +189,17 @@
       }
 
       main {
-        padding: 40px 20px;
+        padding: 60px 20px;
       }
 
       h1, h2 {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
       }
 
       .profession {
         font-size: 1.2rem;
       }
     }
-
-    @keyframes jelly {
-      0% { transform: scale(1); }
-      30% { transform: scale(1.2, 0.8); }
-      50% { transform: scale(0.9, 1.1); }
-      70% { transform: scale(1.05, 0.95); }
-      100% { transform: scale(1); }
-    }
-
-    nav a::after, .lang-switch button::after {
-      content: "";
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 70%);
-      border-radius: 50%;
-      top: -50%;
-      left: -50%;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-    }
-
-    nav a:hover::after, .lang-switch button:hover::after {
-      opacity: 1;
-      animation: bubble 0.6s ease-out forwards;
-    }
-
-    @keyframes bubble {
-      0% { transform: scale(0); opacity: 0.5; }
-      50% { transform: scale(1.2); opacity: 0.2; }
-      100% { transform: scale(1.8); opacity: 0; }
-    }
-
   </style>
 </head>
 <body>
@@ -188,12 +221,13 @@
   </main>
 
   <script>
-    // Mouse parallax shimmer
     document.body.addEventListener("mousemove", function(e) {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
-      document.body.style.setProperty('--x', `${x}%`);
-      document.body.style.setProperty('--y', `${y}%`);
+      document.body.style.backgroundImage = `
+        radial-gradient(circle at ${x}% ${y}%, rgba(255,189,245,0.07), transparent 60%),
+        radial-gradient(circle at center, var(--bg2), var(--bg1))
+      `;
     });
   </script>
 </body>
